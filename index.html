@@ -1,15 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Floorplan Generator</title>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.11.5/lib/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/addons/p5.sound.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
-
+    <style>
+      body {
+        font-family: Helvetica, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+      h1 {
+        font-family: Helvetica, sans-serif;
+        text-align: center;
+        font-size: 3em;
+        margin-bottom: 0.2em; /* Reduced space between title and subtitle */
+      }
+      h2 {
+        font-family: Helvetica, sans-serif;
+        text-align: center;
+        margin-bottom: 0.5em;
+        opacity: 0.7;
+      }
+      button {
+        margin-top: 0.5em;
+        margin-bottom: 20px;
+      }
+      #controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+        border: 1px solid black;
+        background-color: lightgrey;
+        padding: 10px;
+      }
+      #controls > div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      #controls > div > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 20px;
+      }
+      #slider-box {
+        width: 50px;
+        margin-left: 10px;
+      }
+      #rooms-box {
+        width: 50px;
+        margin-left: 10px;
+      }
+      #abstractness-box {
+        width: 50px;
+        margin-left: 10px;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
   </head>
   <body>
-    <main>
-    </main>
+    <h1>Floorplan Generator</h1>
+    <h2>Logan, Jack, & Jerry</h2>
+    <button onclick="window.location.href='https://github.com/logan-shehane/CMPM-147-Floorplan-Generator'">GitHub Repository</button>
+    <main> </main>
+    <div id="controls">
+      <h3>Controls</h3>
+      <div style="display: flex; flex-direction: row">
+        <div>
+          <label for="roomsSlider">Number of Rooms:</label>
+          <input type="range" id="roomsSlider" min="0" max="100" value="50" />
+          <input type="number" id="rooms-box" value="50" />
+        </div>
+        <div>
+          <label for="abstractnessSlider">Abstractness:</label>
+          <input type="range" id="abstractnessSlider" min="0" max="100" value="50" />
+          <input type="number" id="abstractness-box" value="50" />
+        </div>
+      </div>
+    </div>
     <script src="sketch.js"></script>
+    <script>
+      const roomsSlider = document.getElementById("roomsSlider");
+      const roomsBox = document.getElementById("rooms-box");
+      const abstractnessSlider = document.getElementById("abstractnessSlider");
+      const abstractnessBox = document.getElementById("abstractness-box");
+
+      roomsSlider.oninput = function () {
+        roomsBox.value = roomsSlider.value;
+      };
+
+      roomsBox.oninput = function () {
+        roomsSlider.value = roomsBox.value;
+      };
+
+      abstractnessSlider.oninput = function () {
+        abstractnessBox.value = abstractnessSlider.value;
+      };
+
+      abstractnessBox.oninput = function () {
+        abstractnessSlider.value = abstractnessBox.value;
+      };
+    </script>
   </body>
 </html>
