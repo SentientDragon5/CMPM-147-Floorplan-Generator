@@ -14,12 +14,18 @@
         align-items: center;
         min-height: 100vh;
         margin: 0;
+        background-color: #0b2c77;
+        color: white;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+        background-size: 20px 20px;
       }
       h1 {
         font-family: Helvetica, sans-serif;
         text-align: center;
         font-size: 3em;
-        margin-bottom: 0.2em; /* Reduced space between title and subtitle */
+        margin-bottom: 0.2em;
       }
       h2 {
         font-family: Helvetica, sans-serif;
@@ -30,14 +36,20 @@
       button {
         margin-top: 0.5em;
         margin-bottom: 20px;
+        background-color: #4a5568;
+        color: white;
+        border: none;
+        padding: 0.5em 1em;
+        border-radius: 5px;
+        cursor: pointer;
       }
       #controls {
         display: flex;
         flex-direction: column;
         align-items: center;
         margin-top: 20px;
-        border: 1px solid black;
-        background-color: lightgrey;
+        border: 1px solid rgba(255, 255, 255, 0.8); 
+        background-color: rgba(255, 255, 255, 0.3);
         padding: 10px;
       }
       #controls > div {
@@ -55,6 +67,11 @@
       #slider-box {
         width: 50px;
         margin-left: 10px;
+        background-color: #4a5568;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        padding: 0.2em;
       }
       #rooms-box {
         width: 50px;
@@ -71,13 +88,21 @@
       }
       canvas {
         display: block;
+        background-color: #374151;
+      }
+      label {
+        color: white;
+        margin-bottom: 0.3em;
+      }
+      input[type="range"] {
+        background-color: #294575;
       }
     </style>
   </head>
   <body>
     <h1>Floorplan Generator</h1>
     <h2>Logan, Jack, & Jerry</h2>
-    <button onclick="window.location.href='https://github.com/logan-shehane/CMPM-147-Floorplan-Generator'">GitHub Repository</button>
+    <button onclick="window.location.href='https://github.com/SentientDragon5/CMPM-147-Floorplan-Generator'">GitHub Repository</button>
     <main> </main>
     <div id="controls">
       <h3>Controls</h3>
