@@ -6,7 +6,8 @@ new p5(function (p) {
   myp5 = p;
 
   p.setup = function () {
-    p.createCanvas(400, 400);
+    let canvas = p.createCanvas(400, 400);
+    canvas.parent(document.getElementById("canvasContainer"));
     p.background(220);
   };
 
@@ -17,4 +18,4 @@ new p5(function (p) {
     p.text("Number of Rooms: " + sliderValue, 10, 20);
     p.text("Abstractness: " + abstractnessValue, 10, 40);
   };
-}, "main");
+});
