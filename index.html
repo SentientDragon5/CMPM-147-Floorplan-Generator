@@ -118,6 +118,10 @@
           <input type="range" id="abstractnessSlider" min="0" max="100" value="50" />
           <input type="number" id="abstractness-box" value="50" />
         </div>
+        <div>
+          <label for="seed-box">Seed:</label>
+          <input type="text" id="seed-box" value="0" />
+        </div>
       </div>
     </div>
     <script src="sketch.js"></script>
@@ -126,6 +130,7 @@
       const roomsBox = document.getElementById("rooms-box");
       const abstractnessSlider = document.getElementById("abstractnessSlider");
       const abstractnessBox = document.getElementById("abstractness-box");
+      const seedBox = document.getElementById("seed-box");
 
       roomsSlider.oninput = function () {
         roomsBox.value = roomsSlider.value;
