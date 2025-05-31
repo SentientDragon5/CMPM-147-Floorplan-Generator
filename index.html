@@ -81,6 +81,10 @@
         width: 50px;
         margin-left: 10px;
       }
+      #seed-box {
+        width: 60px;
+        margin-left: 10px;
+      }
       html,
       body {
         margin: 0;
@@ -121,6 +125,7 @@
         <div>
           <label for="seed-box">Seed:</label>
           <input type="text" id="seed-box" value="0" />
+          <button id="reroll-seed" style="margin-top: 8px; width: 60px;">Reroll</button>
         </div>
       </div>
     </div>
@@ -131,6 +136,7 @@
       const abstractnessSlider = document.getElementById("abstractnessSlider");
       const abstractnessBox = document.getElementById("abstractness-box");
       const seedBox = document.getElementById("seed-box");
+      const rerollSeed = document.getElementById("reroll-seed");
 
       roomsSlider.oninput = function () {
         roomsBox.value = roomsSlider.value;
@@ -146,6 +152,12 @@
 
       abstractnessBox.oninput = function () {
         abstractnessSlider.value = abstractnessBox.value;
+      };
+
+      rerollSeed.onclick = function () {
+        const newSeed = Math.floor(Math.random() * 10000);
+        seedBox.value = newSeed;
+        seedBox.dispatchEvent(new Event('input'));
       };
     </script>
   </body>
