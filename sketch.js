@@ -41,18 +41,14 @@ new p5(function (p) {
       p.randomSeed(Number(seedValue));
       grid = p.generateGrid();
     }
-    p.background(220);
+    p.clear();
+    //p.background(220);
     sliderValue = document.getElementById("roomsSlider").value;
     abstractnessValue = document.getElementById("abstractnessSlider").value;
     //p.text("Number of Rooms: " + sliderValue, 10, 20);
     //p.text("Abstractness: " + abstractnessValue, 10, 40);
 
-    // Render the grid
-    for (let i = 0; i < grid.length; i++) {
-      for (let j = 0; j < grid[i].length; j++) {
-        p.placeTile(i * TILE_SIZE, j * TILE_SIZE, tileNames[grid[i][j]]);
-      }
-    }
+    p.drawGrid(grid);
   };
 
   p.placeTile = function (x, y, tileName) {
@@ -66,17 +62,17 @@ new p5(function (p) {
     for (let i = 0; i < cols; i++) {
       arr[i] = [];
       for (let j = 0; j < rows; j++) {
-        arr[i][j] = Math.floor(myp5.random(0, 5));
+        arr[i][j] = Math.floor(myp5.random(-1, 5));
       }
     }
     return arr;
   };
   p.drawGrid = function (grid) {
-    p.background(128);
 
     for (let i = 0; i < grid.length; i++) {
       for (let j = 0; j < grid[i].length; j++) {
-        p.placeTile(i, j, p.random(4) | 0, 13);
+        if (grid[i][j] < 0) continue;
+        p.placeTile(i * TILE_SIZE, j * TILE_SIZE, tileNames[grid[i][j]]);
       }
     }
   };
