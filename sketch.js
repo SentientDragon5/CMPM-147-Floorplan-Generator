@@ -1,10 +1,13 @@
 let myp5;
-let roomsValue = 4;
-let abstractnessValue = 50;
 const TILE_SIZE = 16;
-
-let seedValue = Math.floor(Math.random() * 10000);
 let grid = [];
+
+const roomsSlider = document.getElementById("roomsSlider");
+const roomsBox = document.getElementById("rooms-box");
+const abstractnessSlider = document.getElementById("abstractnessSlider");
+const abstractnessBox = document.getElementById("abstractness-box");
+const seedBox = document.getElementById("seed-box");
+const rerollSeed = document.getElementById("reroll-seed");
 
 class Room {
   constructor(x, y, width, height) {
@@ -28,29 +31,31 @@ new p5(function (p) {
   };
 
   p.setup = function () {
-    document.getElementById("seed-box").value = seedValue;
+    p.reroll();
     let canvas = p.createCanvas(400, 400);
     canvas.parent(document.getElementById("canvasContainer"));
     p.background(220);
-    p.randomSeed(Number(seedValue));
+    grid = p.generateGrid();
+  };
+
+  p.setSeed = function (seedValue) {
+    let seed = Number(seedValue);
+    p.randomSeed(seedValue);
+    seedBox.value = seedValue;
+    console.log("Seed set to", seedValue);
+    return seed;
+  };
+  p.reroll = function () {
+    let seed = Math.floor(Math.random() * 10000);
+    return p.setSeed(seed);
+  };
+
+  p.regenerate = function () {
     grid = p.generateGrid();
   };
 
   p.draw = function () {
-    // Update seed if changed
-    let newSeed = document.getElementById("seed-box").value;
-    if (newSeed !== seedValue) {
-      seedValue = newSeed;
-      p.randomSeed(Number(seedValue));
-      grid = p.generateGrid();
-    }
     p.clear();
-    //p.background(220);
-    roomsValue = document.getElementById("roomsSlider").value;
-    abstractnessValue = document.getElementById("abstractnessSlider").value;
-    //p.text("Number of Rooms: " + sliderValue, 10, 20);
-    //p.text("Abstractness: " + abstractnessValue, 10, 40);
-
     p.drawGrid(grid);
   };
 
@@ -75,7 +80,11 @@ new p5(function (p) {
     rooms.push(rootRoom);
 
     let splitRoom = function (room) {
-      if (rooms.length < roomsValue && room.width > 10 && room.height > 10) {
+      if (
+        rooms.length < roomsSlider.value &&
+        room.width > 10 &&
+        room.height > 10
+      ) {
         // Decide to split horizontally or vertically
         let splitH = myp5.random(1) > 0.5;
 
@@ -114,7 +123,7 @@ new p5(function (p) {
 
     let maxIterations = 20; // cap the iterations
     let iterations = 0;
-    while (rooms.length < roomsValue && iterations < maxIterations) {
+    while (rooms.length < roomsSlider.value && iterations < maxIterations) {
       let roomToSplit = rooms[Math.floor(myp5.random(rooms.length))];
       let newRooms = splitRoom(roomToSplit);
 
@@ -163,3 +172,33 @@ new p5(function (p) {
     }
   };
 });
+
+roomsSlider.oninput = function () {
+  roomsBox.value = roomsSlider.value;
+  myp5.regenerate();
+};
+
+roomsBox.oninput = function () {
+  roomsSlider.value = roomsBox.value;
+  myp5.regenerate();
+};
+
+abstractnessSlider.oninput = function () {
+  abstractnessBox.value = abstractnessSlider.value;
+  myp5.regenerate();
+};
+
+abstractnessBox.oninput = function () {
+  abstractnessSlider.value = abstractnessBox.value;
+  myp5.regenerate();
+};
+
+seedBox.oninput = function () {
+  myp5.setSeed(seedBox.value);
+  myp5.regenerate();
+};
+
+rerollSeed.onclick = function () {
+  myp5.reroll();
+  myp5.regenerate();
+};
