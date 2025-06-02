@@ -1,6 +1,25 @@
 let myp5;
 let grid = [];
 
+class Room {
+  constructor(x, y, width, height, name) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.name = name;
+    this.decorList = [];
+  }
+}
+class Decor {
+  constructor(x, y, width, height, name) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.name = name;
+  }
+}
 const TILE_SIZE = 16;
 const TILE_NAMES = ["background", "bathroom", "carpet", "kitchen", "wall"];
 
