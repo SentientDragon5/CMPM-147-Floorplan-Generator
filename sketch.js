@@ -1,30 +1,9 @@
-let myp5;
-const TILE_SIZE = 16;
-let grid = [];
-
-const roomsSlider = document.getElementById("roomsSlider");
-const roomsBox = document.getElementById("rooms-box");
-const abstractnessSlider = document.getElementById("abstractnessSlider");
-const abstractnessBox = document.getElementById("abstractness-box");
-const seedBox = document.getElementById("seed-box");
-const rerollSeed = document.getElementById("reroll-seed");
-
-class Room {
-  constructor(x, y, width, height) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-  }
-}
-
 new p5(function (p) {
   myp5 = p;
-  let tileNames = ["background", "bathroom", "carpet", "kitchen", "wall"];
   let tileset = {};
 
   p.preload = function () {
-    tileNames.forEach((t) => {
+    TILE_NAMES.forEach((t) => {
       tileset[t] = p.loadImage("./assets/tiles/" + t + ".png");
       console.log(t + " loaded");
     });
@@ -167,38 +146,8 @@ new p5(function (p) {
     for (let i = 0; i < grid.length; i++) {
       for (let j = 0; j < grid[i].length; j++) {
         if (grid[i][j] < 0) continue;
-        p.placeTile(i * TILE_SIZE, j * TILE_SIZE, tileNames[grid[i][j]]);
+        p.placeTile(i * TILE_SIZE, j * TILE_SIZE, TILE_NAMES[grid[i][j]]);
       }
     }
   };
 });
-
-roomsSlider.oninput = function () {
-  roomsBox.value = roomsSlider.value;
-  myp5.regenerate();
-};
-
-roomsBox.oninput = function () {
-  roomsSlider.value = roomsBox.value;
-  myp5.regenerate();
-};
-
-abstractnessSlider.oninput = function () {
-  abstractnessBox.value = abstractnessSlider.value;
-  myp5.regenerate();
-};
-
-abstractnessBox.oninput = function () {
-  abstractnessSlider.value = abstractnessBox.value;
-  myp5.regenerate();
-};
-
-seedBox.oninput = function () {
-  myp5.setSeed(seedBox.value);
-  myp5.regenerate();
-};
-
-rerollSeed.onclick = function () {
-  myp5.reroll();
-  myp5.regenerate();
-};
