@@ -10,6 +10,15 @@ class Room {
     this.name = name;
     this.decorList = [];
   }
+
+  drawLabel(p) {
+    p.textAlign(p.CENTER, p.CENTER);
+    p.textSize(12);
+    p.fill(0);
+    let centerX = (this.x + this.width / 2) * TILE_SIZE;
+    let centerY = (this.y + this.height / 2) * TILE_SIZE;
+    p.text(this.name, centerX, centerY);
+  }
 }
 class Decor {
   constructor(x, y, width, height, name) {

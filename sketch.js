@@ -212,22 +212,3 @@ new p5(function (p) {
     }
   };
 });
-
-class Room {
-  constructor(x, y, width, height, name) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.name = name;
-  }
-
-  drawLabel(p) {
-    p.textAlign(p.CENTER, p.CENTER);
-    p.textSize(12);
-    p.fill(0);
-    let centerX = (this.x + this.width / 2) * TILE_SIZE;
-    let centerY = (this.y + this.height / 2) * TILE_SIZE;
-    p.text(this.name, centerX, centerY);
-  }
-}
