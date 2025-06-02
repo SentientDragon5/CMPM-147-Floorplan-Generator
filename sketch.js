@@ -1,11 +1,21 @@
 new p5(function (p) {
   myp5 = p;
   let tileset = {};
-
+  let decorNames = ["32x16_couch","32x16_table","32x32_bed","sink","south_chair","toilet-horizontal","toilet"]
+  let decorset = {};
+  let roomsDecor = {
+    "bathroom":["sink","toilet","toilet-horizontal"],
+    "living_room":["32x16_couch","32x16_table","south_chair"],
+    "bed_room":["32x32_bed","south_chair","32x16_couch","32x16_table"]
+  }
+  let rooms = [];
   p.preload = function () {
     TILE_NAMES.forEach((t) => {
       tileset[t] = p.loadImage("./assets/tiles/" + t + ".png");
       console.log(t + " loaded");
+    });
+    decorNames.forEach((t) => {
+      decorset[t] = p.loadImage("./assets/props/" + t + ".png");
     });
   };
 
@@ -31,6 +41,7 @@ new p5(function (p) {
 
   p.regenerate = function () {
     grid = p.generateGrid();
+    
   };
 
   p.draw = function () {
@@ -41,6 +52,9 @@ new p5(function (p) {
   p.placeTile = function (x, y, tileName) {
     p.image(tileset[tileName], x, y);
   };
+  p.placeDecor = function(x,y,decorName){
+    p.image(decorset[decorName],x,y);
+  }
 
   p.generateGrid = function () {
     let cols = Math.floor(p.width / TILE_SIZE);
@@ -54,7 +68,7 @@ new p5(function (p) {
       }
     }
 
-    let rooms = [];
+    rooms = [];
     let rootRoom = new Room(1, 1, cols - 2, rows - 2);
     rooms.push(rootRoom);
 
@@ -118,8 +132,7 @@ new p5(function (p) {
     }
 
     // Fill the rooms in the grid
-    for (let k = 0; k < rooms.length; k++) {
-      let room = rooms[k];
+    for (let room of rooms){
       for (let i = room.x; i < room.x + room.width; i++) {
         for (let j = room.y; j < room.y + room.height; j++) {
           if (i < cols && j < rows) {
@@ -136,9 +149,22 @@ new p5(function (p) {
           }
         }
       }
-    }
 
-    console.log(rooms);
+      //add furniture to rooms
+      let randchoices = []
+      for (let x = room.x+1; x < room.x + room.width-1; x++) {
+        for (let y = room.y+1; y < room.y + room.height-1; y++) {
+          if (p.random([0,1,2,3,4,5,6,7,8,9]) == 0){
+            randchoices.push([x,y])
+          }
+        }
+      }
+      for (let location of randchoices){
+        let randdecor = p.random(roomsDecor["bed_room"]);
+        room.decorList.push(new Decor(location[0],location[1],1,1,randdecor))
+      }
+    }
+    
     return arr;
   };
 
@@ -146,8 +172,29 @@ new p5(function (p) {
     for (let i = 0; i < grid.length; i++) {
       for (let j = 0; j < grid[i].length; j++) {
         if (grid[i][j] < 0) continue;
+        if (TILE_NAMES[grid[i][j]] != "wall"){
+          continue;
+        }
         p.placeTile(i * TILE_SIZE, j * TILE_SIZE, TILE_NAMES[grid[i][j]]);
       }
     }
+
+    for (let room of rooms){
+      //draw background
+      for (let x = room.x; x < room.width + room.x; x++){
+        for(let y = room.y; y < room.height + room.y; y++){
+          p.placeTile(x * TILE_SIZE, y * TILE_SIZE, TILE_NAMES[grid[x][y]])
+        }
+      }
+      //draw decor
+      for (let decor of room.decorList){
+        p.print(room.decorList)
+        p.print(decor);
+        p.placeDecor(decor.x * TILE_SIZE, decor.y * TILE_SIZE, decor.name)
+      }
+        
+      
+    }
+
   };
 });
