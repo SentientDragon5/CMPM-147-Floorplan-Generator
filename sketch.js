@@ -79,19 +79,28 @@ new p5(function (p) {
     }
 
     rooms = [];
-    let rootRoom = new Room(1, 1, cols - 2, rows - 2);
+    let w = randRange(HOUSE_BORDER_MIN, HOUSE_BORDER_MAX);
+    let h = randRange(HOUSE_BORDER_MIN, HOUSE_BORDER_MAX);
+    let rootRoom = new Room(
+      1 + Math.floor(w / 2),
+      1 + Math.floor(w / 2),
+      cols - 2 - w,
+      rows - 2 - h
+    );
     rooms.push(rootRoom);
 
     let splitRoom = function (room) {
       if (
         rooms.length < roomsSlider.value &&
-        room.width > 10 &&
-        room.height > 10
+        room.width > ROOM_MIN_W &&
+        room.height > ROOM_MIN_H
       ) {
         let splitH = myp5.random(1) > 0.5;
 
         if (splitH) {
-          let splitPoint = Math.floor(myp5.random(5, room.height - 5));
+          let splitPoint = Math.floor(
+            myp5.random(ROOM_MIN_SPLIT_SIZE, room.height - ROOM_MIN_SPLIT_SIZE)
+          );
           let newRoom1 = new Room(room.x, room.y, room.width, splitPoint);
           newRoom1.name = p.getRoomName();
           let newRoom2 = new Room(
@@ -106,7 +115,9 @@ new p5(function (p) {
           rooms.push(newRoom2);
           return [newRoom1, newRoom2];
         } else {
-          let splitPoint = Math.floor(myp5.random(5, room.width - 5));
+          let splitPoint = Math.floor(
+            myp5.random(ROOM_MIN_SPLIT_SIZE, room.width - ROOM_MIN_SPLIT_SIZE)
+          );
           let newRoom1 = new Room(room.x, room.y, splitPoint, room.height);
           newRoom1.name = p.getRoomName();
           let newRoom2 = new Room(
@@ -125,7 +136,7 @@ new p5(function (p) {
       return null;
     };
 
-    let maxIterations = 20;
+    let maxIterations = 200;
     let iterations = 0;
     while (rooms.length < roomsSlider.value && iterations < maxIterations) {
       let roomToSplit = rooms[Math.floor(myp5.random(rooms.length))];
@@ -148,9 +159,9 @@ new p5(function (p) {
           if (i < cols && j < rows) {
             if (
               i == room.x ||
-              i == room.x + room.width - 1 ||
+              i == room.x + room.width ||
               j == room.y ||
-              j == room.y + room.height - 1
+              j == room.y + room.height
             ) {
               arr[i][j] = 4;
             } else {
@@ -181,8 +192,7 @@ new p5(function (p) {
   };
 
   p.getRoomName = function () {
-    const roomNames = ["Kitchen", "Bathroom", "Living Room", "Bedroom"];
-    return roomNames[Math.floor(p.random(roomNames.length))];
+    return ROOM_NAMES[Math.floor(p.random(ROOM_NAMES.length))];
   };
 
   p.drawGrid = function (grid) {
@@ -205,8 +215,8 @@ new p5(function (p) {
       }
       //draw decor
       for (let decor of room.decorList) {
-        p.print(room.decorList);
-        p.print(decor);
+        //p.print(room.decorList);
+        //p.print(decor);
         p.placeDecor(decor.x * TILE_SIZE, decor.y * TILE_SIZE, decor.name);
       }
     }

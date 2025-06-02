@@ -1,6 +1,16 @@
 let myp5;
 let grid = [];
 
+// currently breaks the project
+// it tries to generate out of bounds.
+const HOUSE_BORDER_MAX = 4;
+const HOUSE_BORDER_MIN = 0;
+
+const ROOM_NAMES = ["Kitchen", "Bathroom", "Living Room", "Bedroom"];
+const ROOM_MIN_W = 8; // Maybe we scale this by abstractness?
+const ROOM_MIN_H = 8;
+const ROOM_MIN_SPLIT_SIZE = 5;
+
 class Room {
   constructor(x, y, width, height, name) {
     this.x = x;
@@ -38,6 +48,11 @@ const abstractnessSlider = document.getElementById("abstractnessSlider");
 const abstractnessBox = document.getElementById("abstractness-box");
 const seedBox = document.getElementById("seed-box");
 const rerollSeed = document.getElementById("reroll-seed");
+
+randRange = function (min, max) {
+  console.log(Math.floor(Math.random() * (max - min) + min));
+  return Math.floor(Math.random() * (max - min) + min);
+};
 
 roomsSlider.oninput = function () {
   roomsBox.value = roomsSlider.value;
