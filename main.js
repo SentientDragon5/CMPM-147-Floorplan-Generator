@@ -6,7 +6,7 @@ let grid = [];
 const HOUSE_BORDER_MAX = 4;
 const HOUSE_BORDER_MIN = 0;
 
-const ROOM_NAMES = ["Kitchen", "Bathroom", "Living Room", "Bedroom"];
+const ROOM_NAMES = ["kitchen", "bathroom", "living_room", "bed_room"];
 const ROOM_MIN_W = 8; // Maybe we scale this by abstractness?
 const ROOM_MIN_H = 8;
 const ROOM_MIN_SPLIT_SIZE = 5;
@@ -30,13 +30,24 @@ class Room {
     p.text(this.name, centerX, centerY);
   }
 }
-class Decor {
-  constructor(x, y, width, height, name) {
-    this.x = x;
-    this.y = y;
+class DecorType{
+  constructor(name,roomArr,wallAdjacent,width = 1,height = 1,){
     this.width = width;
     this.height = height;
     this.name = name;
+    this.roomArr = roomArr;
+    this.wallAdjacent = wallAdjacent;
+    
+  }
+}
+class Decor{
+  constructor(x,y,type){
+    this.x = x;
+    this.y = y;
+    this.type = type
+  }
+  get_name(){
+    return this.type.name;
   }
 }
 const TILE_SIZE = 16;
