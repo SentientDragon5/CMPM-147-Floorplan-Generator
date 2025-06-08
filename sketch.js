@@ -332,6 +332,60 @@ new p5(function (p) {
       }
     }
 
+    // Add internal doors between adjacent rooms
+    for (let i = 0; i < rooms.length; i++) {
+      for (let j = i + 1; j < rooms.length; j++) {
+        let room1 = rooms[i];
+        let room2 = rooms[j];
+
+        // Check if rooms are adjacent horizontally
+        if (room1.y === room2.y && room1.height === room2.height) {
+          if (room1.x + room1.width === room2.x) {
+            // Room1 is to the left of Room2
+            let doorY = Math.floor(
+              p.random(
+                Math.max(room1.y, room2.y) + 1,
+                Math.min(room1.y + room1.height, room2.y + room2.height) - 1
+              )
+            );
+            arr[room1.x + room1.width][doorY] = tileInd("door_east");
+          } else if (room2.x + room2.width === room1.x) {
+            // Room2 is to the left of Room1
+            let doorY = Math.floor(
+              p.random(
+                Math.max(room1.y, room2.y) + 1,
+                Math.min(room1.y + room1.height, room2.y + room2.height) - 1
+              )
+            );
+            arr[room2.x + room2.width][doorY] = tileInd("door_east");
+          }
+        }
+
+        // Check if rooms are adjacent vertically
+        if (room1.x === room2.x && room1.width === room2.width) {
+          if (room1.y + room1.height === room2.y) {
+            // Room1 is above Room2
+            let doorX = Math.floor(
+              p.random(
+                Math.max(room1.x, room2.x) + 1,
+                Math.min(room1.x + room1.width, room2.x + room2.width) - 1
+              )
+            );
+            arr[doorX][room1.y + room1.height] = tileInd("door_south");
+          } else if (room2.y + room2.height === room1.y) {
+            // Room2 is above Room1
+            let doorX = Math.floor(
+              p.random(
+                Math.max(room1.x, room2.x) + 1,
+                Math.min(room1.x + room1.width, room2.x + room2.width) - 1
+              )
+            );
+            arr[doorX][room2.y + room2.height] = tileInd("door_south");
+          }
+        }
+      }
+    }
+
     return arr;
   };
   p.return_size = function (x, y, room) {
