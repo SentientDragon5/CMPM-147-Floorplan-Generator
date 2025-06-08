@@ -91,6 +91,13 @@ new p5(function (p) {
     // p.print(tileName);
     //p.print(tileset)
     p.image(tileset[tileName], x, y);
+    if (SHOW_DEBUG_TILES) {
+      p.text(
+        TILE_NAMES.indexOf(tileName),
+        x + TILE_SIZE / 2,
+        y + TILE_SIZE / 2
+      );
+    }
   };
   p.placeDecor = function (x, y, decorName) {
     p.image(decorset[decorName], x, y);
@@ -339,9 +346,6 @@ new p5(function (p) {
         let tile_id = grid[i][j];
         if (tile_id < 0) continue;
         let tile_name = TILE_NAMES[grid[i][j]];
-        if (tile_name != "wall" && !(tile_name in WINDOW_NAMES)) {
-          continue;
-        }
         p.placeTile(i * TILE_SIZE, j * TILE_SIZE, TILE_NAMES[grid[i][j]]);
       }
     }
@@ -356,8 +360,11 @@ new p5(function (p) {
       //draw decor
 
       for (let decor of room.decorList) {
-        // p.print(room.decorList);
-        // p.print(decor);
+        // in main.js
+        if (SHOW_DEBUG_DECOR_INFO) {
+          // p.print(room.decorList);
+          // p.print(decor);
+        }
         p.placeDecor(
           decor.x * TILE_SIZE,
           decor.y * TILE_SIZE,

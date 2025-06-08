@@ -50,7 +50,8 @@ class Decor {
   }
 }
 
-const SHOW_DEBUG_TILES = false;
+const SHOW_DEBUG_DECOR_INFO = false;
+const SHOW_DEBUG_TILES = true;
 const TILE_SIZE = 16;
 
 const WINDOW_CHANCE_INITIAL = 0.1;
@@ -62,13 +63,14 @@ const WINDOW_NAMES = [
   "window_east",
   "window_west",
 ];
-const TILE_NAMES = WINDOW_NAMES.concat([
+const TILE_NAMES = [
+  "clear",
   "background",
   "bathroom",
   "carpet",
   "kitchen",
   "wall",
-]);
+].concat(WINDOW_NAMES);
 tileInd = function (tile) {
   return TILE_NAMES.indexOf(tile);
 };
