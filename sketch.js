@@ -255,6 +255,7 @@ new p5(function (p) {
 
     // Iterate through each wall and add windows
     for (const wall of walls) {
+      let windowStreak = 0; // Keep track of consecutive windows
       for (let i = wall.start; i < wall.end; i++) {
         let tile_name = tileInd("wall");
         let canPlaceWindow = true;
@@ -289,8 +290,16 @@ new p5(function (p) {
           }
         }
 
-        if (canPlaceWindow && p.random() < 0.2) {
+        let windowChance = WINDOW_CHANCE_INITIAL; // Initial window chance
+        if (windowStreak > 0) {
+          windowChance = WINDOW_CHANCE_AFTER; // Higher chance if there's a streak
+        }
+
+        if (canPlaceWindow && p.random() < windowChance) {
           tile_name = tileInd(wall.windowType);
+          windowStreak++; // Increase streak
+        } else {
+          windowStreak = 0; // Reset streak
         }
 
         if (wall.isVertical) {
