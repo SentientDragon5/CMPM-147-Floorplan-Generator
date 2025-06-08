@@ -257,9 +257,42 @@ new p5(function (p) {
     for (const wall of walls) {
       for (let i = wall.start; i < wall.end; i++) {
         let tile_name = tileInd("wall");
-        if (p.random() < 0.2) {
+        let canPlaceWindow = true;
+
+        if (wall.isVertical) {
+          // Check for interior walls to the right (for west wall) or left (for east wall)
+          let checkX = wall.x + (wall.windowType === "window_west" ? 1 : -1);
+          if (
+            checkX >= 0 &&
+            checkX < cols &&
+            arr[checkX][i] === tileInd("wall")
+          ) {
+            canPlaceWindow = false;
+          }
+          // Check for corners
+          if (i === wall.start || i === wall.end - 1) {
+            canPlaceWindow = false;
+          }
+        } else {
+          // Check for interior walls below (for north wall) or above (for south wall)
+          let checkY = wall.y + (wall.windowType === "window_north" ? 1 : -1);
+          if (
+            checkY >= 0 &&
+            checkY < rows &&
+            arr[i][checkY] === tileInd("wall")
+          ) {
+            canPlaceWindow = false;
+          }
+          // Check for corners
+          if (i === wall.start || i === wall.end - 1) {
+            canPlaceWindow = false;
+          }
+        }
+
+        if (canPlaceWindow && p.random() < 0.2) {
           tile_name = tileInd(wall.windowType);
         }
+
         if (wall.isVertical) {
           arr[wall.x][i] = tile_name;
         } else {
