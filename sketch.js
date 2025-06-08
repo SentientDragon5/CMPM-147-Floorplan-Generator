@@ -79,6 +79,12 @@ new p5(function (p) {
     for (let i = 0; i < rooms.length; i++) {
       rooms[i].drawLabel(p);
     }
+
+    if (SHOW_DEBUG_TILES) {
+      for (let i = 0; i < TILE_NAMES.length; i++) {
+        p.placeTile(0, i * TILE_SIZE, TILE_NAMES[i]);
+      }
+    }
   };
 
   p.placeTile = function (x, y, tileName) {
@@ -213,38 +219,53 @@ new p5(function (p) {
       }
     }
 
-    // Add an iterators that go= through the north and west walls
-    // add windows like the example ones below, but this time editing the tile map.
-    for (let i = rootRoom.x; i < rootRoom.x + rootRoom.width; i++) {
-      let tile_name = tileInd("wall");
-      if (p.random() < 0.2) {
-        tile_name = tileInd("window_north");
-      }
-      arr[i][rootRoom.y] = tile_name;
-    }
+    // Define wall configurations with start, end, and direction
+    const walls = [
+      {
+        start: rootRoom.x,
+        end: rootRoom.x + rootRoom.width,
+        y: rootRoom.y,
+        windowType: "window_north",
+        isVertical: false,
+      }, // North
+      {
+        start: rootRoom.y,
+        end: rootRoom.y + rootRoom.height,
+        x: rootRoom.x,
+        windowType: "window_west",
+        isVertical: true,
+      }, // West
+      {
+        start: rootRoom.x,
+        end: rootRoom.x + rootRoom.width + 1,
+        y: rootRoom.x + rootRoom.height,
+        windowType: "window_south",
+        isVertical: false,
+        offset: rootRoom.x,
+      }, // South
+      {
+        start: rootRoom.y,
+        end: rootRoom.y + rootRoom.height,
+        x: rootRoom.x + rootRoom.width,
+        windowType: "window_east",
+        isVertical: true,
+        offset: rootRoom.y,
+      }, // East
+    ];
 
-    for (let j = rootRoom.y; j < rootRoom.y + rootRoom.height; j++) {
-      let tile_name = tileInd("wall");
-      if (p.random() < 0.2) {
-        tile_name = tileInd("window_west");
+    // Iterate through each wall and add windows
+    for (const wall of walls) {
+      for (let i = wall.start; i < wall.end; i++) {
+        let tile_name = tileInd("wall");
+        if (p.random() < 0.2) {
+          tile_name = tileInd(wall.windowType);
+        }
+        if (wall.isVertical) {
+          arr[wall.x][i] = tile_name;
+        } else {
+          arr[i][wall.y] = tile_name;
+        }
       }
-      arr[rootRoom.x][j] = tile_name;
-    }
-
-    // Add outer walls on the right and bottom
-    for (let i = 0; i < rootRoom.width + 1; i++) {
-      let tile_name = tileInd("wall");
-      if (p.random() < 0.2) {
-        tile_name = tileInd("window_south");
-      }
-      arr[i + rootRoom.x][rootRoom.height + rootRoom.x] = tile_name;
-    }
-    for (let j = 0; j < rootRoom.height; j++) {
-      let tile_name = tileInd("wall");
-      if (p.random() < 0.2) {
-        tile_name = tileInd("window_east");
-      }
-      arr[rootRoom.width + rootRoom.x][j + rootRoom.y] = tile_name;
     }
 
     return arr;

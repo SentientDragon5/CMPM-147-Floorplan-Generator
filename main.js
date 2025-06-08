@@ -49,6 +49,8 @@ class Decor {
     return this.type.name;
   }
 }
+
+const SHOW_DEBUG_TILES = false;
 const TILE_SIZE = 16;
 
 const WINDOW_CHANCE = 0.2;
