@@ -233,6 +233,7 @@ new p5(function (p) {
         end: rootRoom.x + rootRoom.width,
         y: rootRoom.y,
         windowType: "window_north",
+        doorType: "door_north",
         isVertical: false,
       }, // North
       {
@@ -240,6 +241,7 @@ new p5(function (p) {
         end: rootRoom.y + rootRoom.height,
         x: rootRoom.x,
         windowType: "window_west",
+        doorType: "door_west",
         isVertical: true,
       }, // West
       {
@@ -247,6 +249,7 @@ new p5(function (p) {
         end: rootRoom.x + rootRoom.width + 1,
         y: rootRoom.x + rootRoom.height,
         windowType: "window_south",
+        doorType: "door_south",
         isVertical: false,
         offset: rootRoom.x,
       }, // South
@@ -255,10 +258,13 @@ new p5(function (p) {
         end: rootRoom.y + rootRoom.height,
         x: rootRoom.x + rootRoom.width,
         windowType: "window_east",
+        doorType: "door_east",
         isVertical: true,
         offset: rootRoom.y,
       }, // East
     ];
+
+    let doorPlaced = false; // Flag to ensure only one door is placed
 
     // Iterate through each wall and add windows
     for (const wall of walls) {
@@ -266,6 +272,7 @@ new p5(function (p) {
       for (let i = wall.start; i < wall.end; i++) {
         let tile_name = tileInd("wall");
         let canPlaceWindow = true;
+        let canPlaceDoor = !doorPlaced; // Can place door if one hasn't been placed yet
 
         if (wall.isVertical) {
           // Check for interior walls to the right (for west wall) or left (for east wall)
@@ -276,10 +283,12 @@ new p5(function (p) {
             arr[checkX][i] === tileInd("wall")
           ) {
             canPlaceWindow = false;
+            canPlaceDoor = false; // No doors next to interior walls
           }
           // Check for corners
           if (i === wall.start || i === wall.end - 1) {
             canPlaceWindow = false;
+            canPlaceDoor = false; // No doors on corners
           }
         } else {
           // Check for interior walls below (for north wall) or above (for south wall)
@@ -290,10 +299,12 @@ new p5(function (p) {
             arr[i][checkY] === tileInd("wall")
           ) {
             canPlaceWindow = false;
+            canPlaceDoor = false; // No doors next to interior walls
           }
           // Check for corners
           if (i === wall.start || i === wall.end - 1) {
             canPlaceWindow = false;
+            canPlaceDoor = false; // No doors on corners
           }
         }
 
@@ -302,7 +313,11 @@ new p5(function (p) {
           windowChance = WINDOW_CHANCE_AFTER; // Higher chance if there's a streak
         }
 
-        if (canPlaceWindow && p.random() < windowChance) {
+        if (canPlaceDoor && p.random() < 0.3) {
+          // 30% chance to place a door if conditions are met
+          tile_name = tileInd(wall.doorType);
+          doorPlaced = true; // Ensure only one door is placed
+        } else if (canPlaceWindow && p.random() < windowChance) {
           tile_name = tileInd(wall.windowType);
           windowStreak++; // Increase streak
         } else {
