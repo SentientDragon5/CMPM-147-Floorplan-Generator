@@ -51,6 +51,7 @@ class Decor {
 }
 const TILE_SIZE = 16;
 
+const WINDOW_CHANCE = 0.2;
 // Add window tile names
 const WINDOW_NAMES = [
   "window_north",

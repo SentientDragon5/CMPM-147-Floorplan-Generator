@@ -213,12 +213,38 @@ new p5(function (p) {
       }
     }
 
+    // Add an iterators that go= through the north and west walls
+    // add windows like the example ones below, but this time editing the tile map.
+    for (let i = rootRoom.x; i < rootRoom.x + rootRoom.width; i++) {
+      let tile_name = tileInd("wall");
+      if (p.random() < 0.2) {
+        tile_name = tileInd("window_north");
+      }
+      arr[i][rootRoom.y] = tile_name;
+    }
+
+    for (let j = rootRoom.y; j < rootRoom.y + rootRoom.height; j++) {
+      let tile_name = tileInd("wall");
+      if (p.random() < 0.2) {
+        tile_name = tileInd("window_west");
+      }
+      arr[rootRoom.x][j] = tile_name;
+    }
+
     // Add outer walls on the right and bottom
     for (let i = 0; i < rootRoom.width + 1; i++) {
-      arr[i + rootRoom.x][rootRoom.height + rootRoom.x] = tileInd("wall");
+      let tile_name = tileInd("wall");
+      if (p.random() < 0.2) {
+        tile_name = tileInd("window_south");
+      }
+      arr[i + rootRoom.x][rootRoom.height + rootRoom.x] = tile_name;
     }
     for (let j = 0; j < rootRoom.height; j++) {
-      arr[rootRoom.width + rootRoom.x][j + rootRoom.y] = tileInd("wall");
+      let tile_name = tileInd("wall");
+      if (p.random() < 0.2) {
+        tile_name = tileInd("window_east");
+      }
+      arr[rootRoom.width + rootRoom.x][j + rootRoom.y] = tile_name;
     }
 
     return arr;
@@ -247,8 +273,10 @@ new p5(function (p) {
   p.drawGrid = function (grid) {
     for (let i = 0; i < grid.length; i++) {
       for (let j = 0; j < grid[i].length; j++) {
-        if (grid[i][j] < 0) continue;
-        if (TILE_NAMES[grid[i][j]] != "wall") {
+        let tile_id = grid[i][j];
+        if (tile_id < 0) continue;
+        let tile_name = TILE_NAMES[grid[i][j]];
+        if (tile_name != "wall" && !(tile_name in WINDOW_NAMES)) {
           continue;
         }
         p.placeTile(i * TILE_SIZE, j * TILE_SIZE, TILE_NAMES[grid[i][j]]);
