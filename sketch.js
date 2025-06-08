@@ -187,9 +187,9 @@ new p5(function (p) {
               j == room.y ||
               j == room.y + room.height
             ) {
-              arr[i][j] = 4;
+              arr[i][j] = tileInd("wall");
             } else {
-              arr[i][j] = 2; // Carpet
+              arr[i][j] = tileInd("carpet");
             }
           }
         }
@@ -215,10 +215,10 @@ new p5(function (p) {
 
     // Add outer walls on the right and bottom
     for (let i = 0; i < rootRoom.width + 1; i++) {
-      arr[i + rootRoom.x][rootRoom.height + rootRoom.x] = 4; // Bottom wall
+      arr[i + rootRoom.x][rootRoom.height + rootRoom.x] = tileInd("wall");
     }
     for (let j = 0; j < rootRoom.height; j++) {
-      arr[rootRoom.width + rootRoom.x][j + rootRoom.y] = 4; // Right wall
+      arr[rootRoom.width + rootRoom.x][j + rootRoom.y] = tileInd("wall");
     }
 
     return arr;
@@ -237,7 +237,7 @@ new p5(function (p) {
         }
       }
     }
-    p.print(options);
+    //p.print(options);
     return options;
   };
   p.getRoomName = function () {
@@ -265,8 +265,8 @@ new p5(function (p) {
       //draw decor
 
       for (let decor of room.decorList) {
-        p.print(room.decorList);
-        p.print(decor);
+        // p.print(room.decorList);
+        // p.print(decor);
         p.placeDecor(
           decor.x * TILE_SIZE,
           decor.y * TILE_SIZE,

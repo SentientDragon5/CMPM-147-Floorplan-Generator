@@ -30,28 +30,44 @@ class Room {
     p.text(this.name, centerX, centerY);
   }
 }
-class DecorType{
-  constructor(name,roomArr,wallAdjacent,width = 1,height = 1,){
+class DecorType {
+  constructor(name, roomArr, wallAdjacent, width = 1, height = 1) {
     this.width = width;
     this.height = height;
     this.name = name;
     this.roomArr = roomArr;
     this.wallAdjacent = wallAdjacent;
-    
   }
 }
-class Decor{
-  constructor(x,y,type){
+class Decor {
+  constructor(x, y, type) {
     this.x = x;
     this.y = y;
-    this.type = type
+    this.type = type;
   }
-  get_name(){
+  get_name() {
     return this.type.name;
   }
 }
 const TILE_SIZE = 16;
-const TILE_NAMES = ["background", "bathroom", "carpet", "kitchen", "wall"];
+
+// Add window tile names
+const WINDOW_NAMES = [
+  "window_north",
+  "window_south",
+  "window_east",
+  "window_west",
+];
+const TILE_NAMES = WINDOW_NAMES.concat([
+  "background",
+  "bathroom",
+  "carpet",
+  "kitchen",
+  "wall",
+]);
+tileInd = function (tile) {
+  return TILE_NAMES.indexOf(tile);
+};
 
 const roomsSlider = document.getElementById("roomsSlider");
 const roomsBox = document.getElementById("rooms-box");
