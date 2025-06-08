@@ -63,6 +63,7 @@ const WINDOW_NAMES = [
   "window_east",
   "window_west",
 ];
+const DOOR_NAMES = ["door_north", "door_south", "door_east", "door_west"];
 const TILE_NAMES = [
   "clear",
   "background",
@@ -70,7 +71,7 @@ const TILE_NAMES = [
   "carpet",
   "kitchen",
   "wall",
-].concat(WINDOW_NAMES);
+].concat(WINDOW_NAMES, DOOR_NAMES);
 tileInd = function (tile) {
   return TILE_NAMES.indexOf(tile);
 };
