@@ -1,26 +1,42 @@
 new p5(function (p) {
   myp5 = p;
   let tileset = {};
-  let decorNames = ["32x16_couch","32x16_table","32x32_bed","sink","south_chair","toilet-horizontal","toilet","32x16_bathtub","shower","oven"]
+  let decorNames = [
+    "32x16_couch",
+    "32x16_table",
+    "32x32_bed",
+    "sink",
+    "south_chair",
+    "toilet-horizontal",
+    "toilet",
+    "32x16_bathtub",
+    "shower",
+    "oven",
+  ];
   let decorset = {};
   let roomsDecor = {
-    "bathroom":["sink","toilet","toilet-horizontal","shower"],
-    "living_room":["32x16_couch","32x16_table","south_chair"],
-    "bed_room":["32x32_bed","south_chair","32x16_couch","32x16_table"],
-    "kitchen":["oven","south_chair","32x16_table"]
-  }
+    bathroom: ["sink", "toilet", "toilet-horizontal", "shower"],
+    living_room: ["32x16_couch", "32x16_table", "south_chair"],
+    bed_room: ["32x32_bed", "south_chair", "32x16_couch", "32x16_table"],
+    kitchen: ["oven", "south_chair", "32x16_table"],
+  };
   let decorTypeArr = [
-    new DecorType("32x16_bathtub",["bathroom"],false,2),
-    new DecorType("32x16_couch",["living_room","bed_room"],false,2),
-    new DecorType("32x16_table",["living_room","bed_room","kitchen"],false,2),
-    new DecorType("32x32_bed",["bed_room"],true,2,2),
-    new DecorType("oven",["kitchen"],true),
-    new DecorType("shower",["bathroom"],true),
-    new DecorType("sink",["kitchen"],true),
-    new DecorType("south_chair",["bed_room","kitchen","living_room"],false),
-    new DecorType("toilet-horizontal",["bathroom"],true),
-    new DecorType("toilet",["bathroom"],true),
-  ]
+    new DecorType("32x16_bathtub", ["bathroom"], false, 2),
+    new DecorType("32x16_couch", ["living_room", "bed_room"], false, 2),
+    new DecorType(
+      "32x16_table",
+      ["living_room", "bed_room", "kitchen"],
+      false,
+      2
+    ),
+    new DecorType("32x32_bed", ["bed_room"], true, 2, 2),
+    new DecorType("oven", ["kitchen"], true),
+    new DecorType("shower", ["bathroom"], true),
+    new DecorType("sink", ["kitchen"], true),
+    new DecorType("south_chair", ["bed_room", "kitchen", "living_room"], false),
+    new DecorType("toilet-horizontal", ["bathroom"], true),
+    new DecorType("toilet", ["bathroom"], true),
+  ];
 
   let rooms = [];
   p.preload = function () {
@@ -63,12 +79,25 @@ new p5(function (p) {
     for (let i = 0; i < rooms.length; i++) {
       rooms[i].drawLabel(p);
     }
+
+    if (SHOW_DEBUG_TILES) {
+      for (let i = 0; i < TILE_NAMES.length; i++) {
+        p.placeTile(0, i * TILE_SIZE, TILE_NAMES[i]);
+      }
+    }
   };
 
   p.placeTile = function (x, y, tileName) {
-   // p.print(tileName);
-   //p.print(tileset)
+    // p.print(tileName);
+    //p.print(tileset)
     p.image(tileset[tileName], x, y);
+    if (SHOW_DEBUG_TILES) {
+      p.text(
+        TILE_NAMES.indexOf(tileName),
+        x + TILE_SIZE / 2,
+        y + TILE_SIZE / 2
+      );
+    }
   };
   p.placeDecor = function (x, y, decorName) {
     p.image(decorset[decorName], x, y);
@@ -171,51 +200,211 @@ new p5(function (p) {
               j == room.y ||
               j == room.y + room.height
             ) {
-              arr[i][j] = 4;
+              arr[i][j] = tileInd("wall");
             } else {
-              arr[i][j] = 2; // Carpet
+              arr[i][j] = tileInd("carpet");
             }
           }
         }
       }
-      
+
       //add furniture to rooms
-      let randchoices = []
-      for (let x = room.x+1; x < room.x + room.width; x++) {
-        for (let y = room.y+1; y < room.y + room.height; y++) {
-          if (p.random([0,1,2,3,4,5,6,7,8,9]) == 0){
-            randchoices.push([x,y])
+      let randchoices = [];
+      for (let x = room.x + 1; x < room.x + room.width; x++) {
+        for (let y = room.y + 1; y < room.y + room.height; y++) {
+          if (p.random([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) == 0) {
+            randchoices.push([x, y]);
           }
         }
       }
       for (let location of randchoices) {
         //p.random(p.return_options())
-        let temp = p.return_size(location[0],location[1],room);
-        let chosen = p.random(p.return_options(temp[0],temp[1],room.name)) // returns decorType
+        let temp = p.return_size(location[0], location[1], room);
+        let chosen = p.random(p.return_options(temp[0], temp[1], room.name)); // returns decorType
         //p.print(chosen)
-        room.decorList.push(new Decor(location[0],location[1],chosen))
+        room.decorList.push(new Decor(location[0], location[1], chosen));
+      }
+    }
+
+    // Define wall configurations with start, end, and direction
+    const walls = [
+      {
+        start: rootRoom.x,
+        end: rootRoom.x + rootRoom.width,
+        y: rootRoom.y,
+        windowType: "window_north",
+        doorType: "door_north",
+        isVertical: false,
+      }, // North
+      {
+        start: rootRoom.y,
+        end: rootRoom.y + rootRoom.height,
+        x: rootRoom.x,
+        windowType: "window_west",
+        doorType: "door_west",
+        isVertical: true,
+      }, // West
+      {
+        start: rootRoom.x,
+        end: rootRoom.x + rootRoom.width + 1,
+        y: rootRoom.x + rootRoom.height,
+        windowType: "window_south",
+        doorType: "door_south",
+        isVertical: false,
+        offset: rootRoom.x,
+      }, // South
+      {
+        start: rootRoom.y,
+        end: rootRoom.y + rootRoom.height,
+        x: rootRoom.x + rootRoom.width,
+        windowType: "window_east",
+        doorType: "door_east",
+        isVertical: true,
+        offset: rootRoom.y,
+      }, // East
+    ];
+
+    let doorPlaced = false; // Flag to ensure only one door is placed
+
+    // Iterate through each wall and add windows
+    for (const wall of walls) {
+      let windowStreak = 0; // Keep track of consecutive windows
+      for (let i = wall.start; i < wall.end; i++) {
+        let tile_name = tileInd("wall");
+        let canPlaceWindow = true;
+        let canPlaceDoor = !doorPlaced; // Can place door if one hasn't been placed yet
+
+        if (wall.isVertical) {
+          // Check for interior walls to the right (for west wall) or left (for east wall)
+          let checkX = wall.x + (wall.windowType === "window_west" ? 1 : -1);
+          if (
+            checkX >= 0 &&
+            checkX < cols &&
+            arr[checkX][i] === tileInd("wall")
+          ) {
+            canPlaceWindow = false;
+            canPlaceDoor = false; // No doors next to interior walls
+          }
+          // Check for corners
+          if (i === wall.start || i === wall.end - 1) {
+            canPlaceWindow = false;
+            canPlaceDoor = false; // No doors on corners
+          }
+        } else {
+          // Check for interior walls below (for north wall) or above (for south wall)
+          let checkY = wall.y + (wall.windowType === "window_north" ? 1 : -1);
+          if (
+            checkY >= 0 &&
+            checkY < rows &&
+            arr[i][checkY] === tileInd("wall")
+          ) {
+            canPlaceWindow = false;
+            canPlaceDoor = false; // No doors next to interior walls
+          }
+          // Check for corners
+          if (i === wall.start || i === wall.end - 1) {
+            canPlaceWindow = false;
+            canPlaceDoor = false; // No doors on corners
+          }
+        }
+
+        let windowChance = WINDOW_CHANCE_INITIAL; // Initial window chance
+        if (windowStreak > 0) {
+          windowChance = WINDOW_CHANCE_AFTER; // Higher chance if there's a streak
+        }
+
+        if (canPlaceDoor && p.random() < 0.3) {
+          // 30% chance to place a door if conditions are met
+          tile_name = tileInd(wall.doorType);
+          doorPlaced = true; // Ensure only one door is placed
+        } else if (canPlaceWindow && p.random() < windowChance) {
+          tile_name = tileInd(wall.windowType);
+          windowStreak++; // Increase streak
+        } else {
+          windowStreak = 0; // Reset streak
+        }
+
+        if (wall.isVertical) {
+          arr[wall.x][i] = tile_name;
+        } else {
+          arr[i][wall.y] = tile_name;
+        }
+      }
+    }
+
+    // Add internal doors between adjacent rooms
+    for (let i = 0; i < rooms.length; i++) {
+      for (let j = i + 1; j < rooms.length; j++) {
+        let room1 = rooms[i];
+        let room2 = rooms[j];
+
+        // Check if rooms are adjacent horizontally
+        if (room1.y === room2.y && room1.height === room2.height) {
+          if (room1.x + room1.width === room2.x) {
+            // Room1 is to the left of Room2
+            let doorY = Math.floor(
+              p.random(
+                Math.max(room1.y, room2.y) + 1,
+                Math.min(room1.y + room1.height, room2.y + room2.height) - 1
+              )
+            );
+            arr[room1.x + room1.width][doorY] = tileInd("door_east");
+          } else if (room2.x + room2.width === room1.x) {
+            // Room2 is to the left of Room1
+            let doorY = Math.floor(
+              p.random(
+                Math.max(room1.y, room2.y) + 1,
+                Math.min(room1.y + room1.height, room2.y + room2.height) - 1
+              )
+            );
+            arr[room2.x + room2.width][doorY] = tileInd("door_east");
+          }
+        }
+
+        // Check if rooms are adjacent vertically
+        if (room1.x === room2.x && room1.width === room2.width) {
+          if (room1.y + room1.height === room2.y) {
+            // Room1 is above Room2
+            let doorX = Math.floor(
+              p.random(
+                Math.max(room1.x, room2.x) + 1,
+                Math.min(room1.x + room1.width, room2.x + room2.width) - 1
+              )
+            );
+            arr[doorX][room1.y + room1.height] = tileInd("door_south");
+          } else if (room2.y + room2.height === room1.y) {
+            // Room2 is above Room1
+            let doorX = Math.floor(
+              p.random(
+                Math.max(room1.x, room2.x) + 1,
+                Math.min(room1.x + room1.width, room2.x + room2.width) - 1
+              )
+            );
+            arr[doorX][room2.y + room2.height] = tileInd("door_south");
+          }
+        }
       }
     }
 
     return arr;
   };
-  p.return_size = function(x,y,room){
-    return [room.x + room.width - x, room.y + room.height - y]
-  }
-  p.return_options = function(width,height,roomname){
-    let options = []
-    for (n of decorTypeArr){
-      if (n.roomArr.includes(roomname)){
-        if (n.width <= width){
-          if (n.height <= height){
-            options.push(n)
+  p.return_size = function (x, y, room) {
+    return [room.x + room.width - x, room.y + room.height - y];
+  };
+  p.return_options = function (width, height, roomname) {
+    let options = [];
+    for (n of decorTypeArr) {
+      if (n.roomArr.includes(roomname)) {
+        if (n.width <= width) {
+          if (n.height <= height) {
+            options.push(n);
           }
         }
       }
     }
-    p.print(options)
+    //p.print(options);
     return options;
-  }
+  };
   p.getRoomName = function () {
     return ROOM_NAMES[Math.floor(p.random(ROOM_NAMES.length))];
   };
@@ -223,38 +412,43 @@ new p5(function (p) {
   p.drawGrid = function (grid) {
     for (let i = 0; i < grid.length; i++) {
       for (let j = 0; j < grid[i].length; j++) {
-        if (grid[i][j] < 0) continue;
-        if (TILE_NAMES[grid[i][j]] != "wall") {
-          continue;
-        }
+        let tile_id = grid[i][j];
+        if (tile_id < 0) continue;
+        let tile_name = TILE_NAMES[grid[i][j]];
         p.placeTile(i * TILE_SIZE, j * TILE_SIZE, TILE_NAMES[grid[i][j]]);
       }
     }
     for (let room of rooms) {
       //draw background
-      
-      for (let x = room.x+1; x < room.width + room.x; x++){
-        for(let y = room.y+1; y < room.height + room.y; y++){
-          p.placeTile(x * TILE_SIZE, y * TILE_SIZE, p.get_floor(room.name))
+
+      for (let x = room.x + 1; x < room.width + room.x; x++) {
+        for (let y = room.y + 1; y < room.height + room.y; y++) {
+          p.placeTile(x * TILE_SIZE, y * TILE_SIZE, p.get_floor(room.name));
         }
       }
       //draw decor
-      
-      for (let decor of room.decorList){
-        p.print(room.decorList)
-        p.print(decor);
-        p.placeDecor(decor.x * TILE_SIZE, decor.y * TILE_SIZE, decor.get_name())
+
+      for (let decor of room.decorList) {
+        // in main.js
+        if (SHOW_DEBUG_DECOR_INFO) {
+          // p.print(room.decorList);
+          // p.print(decor);
+        }
+        p.placeDecor(
+          decor.x * TILE_SIZE,
+          decor.y * TILE_SIZE,
+          decor.get_name()
+        );
       }
-        
     }
-  }
-  p.get_floor = function(name){
+  };
+  p.get_floor = function (name) {
     let roomDict = {
-      "bed_room":"carpet",
-      "kitchen":"kitchen",
-      "bathroom":"bathroom",
-      "living_room":"carpet",
-    }
+      bed_room: "carpet",
+      kitchen: "kitchen",
+      bathroom: "bathroom",
+      living_room: "carpet",
+    };
     return roomDict[name];
-  }
+  };
 });
