@@ -122,15 +122,29 @@ function find_location(spacearr, decor,p){
   let randlocation = []
   let chosenlocation = []
   let loops = 0;
+  let adjacent = decor.wallAdjacent;
   while (true){
     loops += 1;
     if (loops > 100){
       p.print("terminated")
       break;
     }
-    randlocation = [Math.floor(p.random(0,spacearr.length)),Math.floor(p.random(0,spacearr[0].length))]
-
+    if (adjacent){
+      if (p.random([0,1]) == 0){
+        randlocation = [p.random([0,1]) * (spacearr.length - 1), Math.floor(p.random(0,spacearr[0].length))]
+      }else{
+        randlocation = [Math.floor(p.random(0,spacearr.length)),p.random([0,1]) * (spacearr[0].length - 1)]
+      }
+    }else{
+      randlocation = [Math.floor(p.random(0,spacearr.length)),Math.floor(p.random(0,spacearr[0].length))]
+    }
     chosenlocation = [-1,-1]
+    
+    //check if decor wants adjacent to wall
+    
+    
+
+
     if(decor.width == 2){
       //check if spot on edge
       if (randlocation[0] == spacearr.length - 1){
@@ -152,7 +166,7 @@ function find_location(spacearr, decor,p){
     for(let x = randlocation[0]; x < randlocation[0] + decor.width; x++){
       for (let y = randlocation[1]; y < randlocation[1] + decor.height; y++){
         p.print(spacearr[x][y])
-        if(spacearr[ x][y] == 1){
+        if(spacearr[x][y] == 1){
           validspot = false;
           break;
         }
