@@ -116,3 +116,67 @@ rerollSeed.onclick = function () {
   myp5.reroll();
   myp5.regenerate();
 };
+
+function find_location(spacearr, decor,p){
+  //spacearr is a 2d array of 1s and 0s, 0s indicating there is space
+  let randlocation = []
+  let chosenlocation = []
+  let loops = 0;
+  while (true){
+    loops += 1;
+    if (loops > 100){
+      p.print("terminated")
+      break;
+    }
+    randlocation = [Math.floor(p.random(0,spacearr.length)),Math.floor(p.random(0,spacearr[0].length))]
+
+    chosenlocation = [-1,-1]
+    if(decor.width == 2){
+      //check if spot on edge
+      if (randlocation[0] == spacearr.length - 1){
+        //spot on edge
+        p.print("spot on edge")
+        continue;
+      }
+    }
+
+    if (decor.height == 2){
+      if (randlocation[1] == spacearr[0].length - 1){
+        //spot on edge
+        p.print("spot on edge")
+        continue;
+      }
+    }
+    p.print(spacearr)
+    p.print(decor.width,decor.height)
+    let validspot = true;
+    for(let x = randlocation[0]; x < randlocation[0] + decor.width; x++){
+      for (let y = randlocation[1]; y < randlocation[1] + decor.height; y++){
+        p.print(spacearr[x][y])
+        if(spacearr[ x][y] == 1){
+          validspot = false;
+          break;
+        }
+      }
+      if (validspot == false){
+          break;
+        }
+    }
+    if (validspot == false){
+      p.print("invalid spot")
+      continue;
+    }
+    chosenlocation = randlocation;
+    
+
+    for(let x = randlocation[0]; x < randlocation[0] + decor.width; x++){
+      for (let y = randlocation[1]; y < randlocation[1] + decor.height; y++){
+        spacearr[x][y] = 1;
+      }
+    }
+    break;
+  }
+  p.print("wah")
+  p.print(spacearr)
+  return chosenlocation;
+}

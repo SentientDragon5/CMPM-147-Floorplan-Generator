@@ -214,7 +214,13 @@ new p5(function (p) {
 
       //add furniture to rooms
       let copiedFurnitureArr = [...roomsBaseDecor[room.name]]
-
+      let roomSpaceArr = []
+      
+      for (let x = 0; x < room.width-1; x++) {
+        let temp = new Array(room.height-1).fill(0);
+        roomSpaceArr.push(temp);
+      }
+      
       // for (let x = room.x + 1; x < room.x + room.width; x++) {
       //   for (let y = room.y + 1; y < room.y + room.height; y++) {
       //     if (p.random([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) == 0) {
@@ -229,11 +235,13 @@ new p5(function (p) {
       //   //p.print(chosen)
       //   room.decorList.push(new Decor(location[0], location[1], chosen));
       // }
-      p.print(room)
       for (n of copiedFurnitureArr){
-        let location = [p.random(room.x + 1,room.x + room.width-1),  p.random(room.y + 1,room.y + room.height-1)]
-        room.decorList.push(new Decor(location[0], location[1], decorTypeDict[n]));
+        let location = find_location(roomSpaceArr,decorTypeDict[n],p);
+        let newLocation = [room.x + 1 + location[0], room.y + 1 + location[1]]
+        
+        room.decorList.push(new Decor(newLocation[0], newLocation[1], decorTypeDict[n]));
       }
+
     }
 
     // Define wall configurations with start, end, and direction
