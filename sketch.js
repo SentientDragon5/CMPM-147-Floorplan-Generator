@@ -22,7 +22,6 @@ new p5(function (p) {
     "lamp": new DecorType("lamp", false ),
     "plant": new DecorType("plant", false ),
     "trashcan": new DecorType("trashcan", false ),
-
     "32x16_bathtub": new DecorType("32x16_bathtub", false, 2),
     "32x16_couch": new DecorType("32x16_couch", false, 2),
     "32x16_table": new DecorType("32x16_table",false,2),
@@ -235,6 +234,11 @@ new p5(function (p) {
       //   //p.print(chosen)
       //   room.decorList.push(new Decor(location[0], location[1], chosen));
       // }
+
+      //mutate furniturearr
+      
+      mutate_arr(copiedFurnitureArr,p)
+      p.print(copiedFurnitureArr)
       for (n of copiedFurnitureArr){
         let location = find_location(roomSpaceArr,decorTypeDict[n],p);
         let newLocation = [room.x + 1 + location[0], room.y + 1 + location[1]]

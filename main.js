@@ -147,8 +147,7 @@ function find_location(spacearr, decor,p){
         continue;
       }
     }
-    p.print(spacearr)
-    p.print(decor.width,decor.height)
+
     let validspot = true;
     for(let x = randlocation[0]; x < randlocation[0] + decor.width; x++){
       for (let y = randlocation[1]; y < randlocation[1] + decor.height; y++){
@@ -176,7 +175,17 @@ function find_location(spacearr, decor,p){
     }
     break;
   }
-  p.print("wah")
-  p.print(spacearr)
+  //p.print("loops", loops)
+  //p.print(spacearr)
   return chosenlocation;
+}
+
+function mutate_arr(arr,p){
+ let readArr = [...arr];
+ let abstraction = abstractnessBox.value;
+
+ for (let n = 0; n < abstraction / 2.0; n++){
+  arr[Math.floor(p.random(0,arr.length))] = readArr[Math.floor(p.random(0,arr.length))];
+ }
+ return arr;
 }
