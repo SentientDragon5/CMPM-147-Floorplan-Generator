@@ -3,21 +3,32 @@ new p5(function (p) {
   let tileset = {};
   let decorset = {};
 
+  let alternate_rotation_dict = {
+    "32x16_sink": ["32x16_sink","16x32_sink"],
+    "32x16_desk": ["32x16_desk","16x32_desk"],
+    "32x16_dresser": ["32x16_dresser","16x32_dresser"],
+    "32x16_fridge": ["32x16_fridge","16x32_fridge"],
+
+  }
   let roomsBaseDecor = {
     bathroom: ["sink", "toilet", "shower", "plant", "trashcan","plant"],
-    living_room: ["32x16_couch", "32x16_table","32x16_dresser", "south_chair", "south_chair", "16x32_dresser", "32x32_bookcase1","lamp","plant", "trashcan"],
-    bed_room: ["32x16_desk", "32x32_bed", "32x16_dresser","32x16_couch", "32x16_table","south_chair", "16x32_desk", "16x32_dresser", "32x32_bookcase1","lamp","plant", "trashcan"],
-    kitchen: ["oven","sink", "32x16_sink", "32x16_table","32x16_fridge","south_chair","south_chair", "16x32_sink","16x32_fridge", "plant","trashcan"],
+    living_room: ["32x16_couch", "32x16_table","32x16_dresser", "south_chair", "south_chair", "32x32_bookcase1","lamp","plant", "trashcan"],
+    bed_room: ["32x16_desk", "32x32_bed", "32x16_dresser","32x16_couch", "32x16_table","south_chair", "32x32_bookcase1","lamp","plant", "trashcan"],
+    kitchen: ["oven","sink", "32x16_sink", "32x16_table","32x16_fridge","south_chair","south_chair", "plant","trashcan"],
   }
   let decorTypeDict = {
     "32x16_desk": new DecorType("32x16_desk",true,2 ),
-    "32x16_sink": new DecorType("32x16_sink",true,2 ),
-    "32x16_dresser": new DecorType("32x16_dresser",true,2 ),
-    "32x16_fridge": new DecorType("32x16_fridge",true,2 ),
-    "16x32_sink": new DecorType("16x32_sink", true,1, 2),
     "16x32_desk": new DecorType("16x32_desk", true,1,2),
+
+    "32x16_sink": new DecorType("32x16_sink",true,2 ),
+    "16x32_sink": new DecorType("16x32_sink", true,1, 2),
+    
+    "32x16_dresser": new DecorType("32x16_dresser",true,2 ),
     "16x32_dresser": new DecorType("16x32_dresser",true ,1,2 ),
+
+    "32x16_fridge": new DecorType("32x16_fridge",true,2 ),
     "16x32_fridge": new DecorType("16x32_fridge", true,1,2 ),
+
     "32x32_bookcase1": new DecorType("32x32_bookcase1", true, 2, 2),
     "lamp": new DecorType("lamp", false ),
     "plant": new DecorType("plant", false ),
@@ -219,25 +230,18 @@ new p5(function (p) {
         let temp = new Array(room.height-1).fill(0);
         roomSpaceArr.push(temp);
       }
-      
-      // for (let x = room.x + 1; x < room.x + room.width; x++) {
-      //   for (let y = room.y + 1; y < room.y + room.height; y++) {
-      //     if (p.random([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) == 0) {
-      //       randchoices.push([x, y]);
-      //     }
-      //   }
-      // }
-      // for (let location of randchoices) {
-      //   //p.random(p.return_options())
-      //   let temp = p.return_size(location[0], location[1], room);
-      //   let chosen = p.random(p.return_options(temp[0], temp[1], room.name)); // returns decorType
-      //   //p.print(chosen)
-      //   room.decorList.push(new Decor(location[0], location[1], chosen));
-      // }
 
       //mutate furniturearr
       
+      
       mutate_arr(copiedFurnitureArr,p)
+      for (let n = 0; n < copiedFurnitureArr.length; n++){
+        if(Object.keys(alternate_rotation_dict).includes(copiedFurnitureArr[n])){
+          copiedFurnitureArr[n] = alternate_rotation_dict[copiedFurnitureArr[n]][p.random([0,1])];
+
+          
+        }
+      }
       p.print(copiedFurnitureArr)
       for (n of copiedFurnitureArr){
         let location = find_location(roomSpaceArr,decorTypeDict[n],p);
