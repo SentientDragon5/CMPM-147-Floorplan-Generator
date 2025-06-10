@@ -4,12 +4,25 @@ new p5(function (p) {
   let decorset = {};
 
   let roomsBaseDecor = {
-    bathroom: ["sink", "toilet", "shower"],
-    living_room: ["32x16_couch", "32x16_table", "south_chair", "south_chair"],
-    bed_room: ["32x32_bed", "32x16_couch", "32x16_table","south_chair"],
-    kitchen: ["oven","sink", "32x16_table","south_chair","south_chair"],
+    bathroom: ["sink", "toilet", "shower", "plant", "trashcan","plant"],
+    living_room: ["32x16_couch", "32x16_table","32x16_dresser", "south_chair", "south_chair", "16x32_dresser", "32x32_bookcase1","lamp","plant", "trashcan"],
+    bed_room: ["32x16_desk", "32x32_bed", "32x16_dresser","32x16_couch", "32x16_table","south_chair", "16x32_desk", "16x32_dresser", "32x32_bookcase1","lamp","plant", "trashcan"],
+    kitchen: ["oven","sink", "32x16_sink", "32x16_table","32x16_fridge","south_chair","south_chair", "16x32_sink","16x32_fridge", "plant","trashcan"],
   }
   let decorTypeDict = {
+    "32x16_desk": new DecorType("32x16_desk",true,2 ),
+    "32x16_sink": new DecorType("32x16_sink",true,2 ),
+    "32x16_dresser": new DecorType("32x16_dresser",true,2 ),
+    "32x16_fridge": new DecorType("32x16_fridge",true,2 ),
+    "16x32_sink": new DecorType("16x32_sink", true,1, 2),
+    "16x32_desk": new DecorType("16x32_desk", true,1,2),
+    "16x32_dresser": new DecorType("16x32_dresser",true ,1,2 ),
+    "16x32_fridge": new DecorType("16x32_fridge", true,1,2 ),
+    "32x32_bookcase1": new DecorType("32x32_bookcase1", true, 2, 2),
+    "lamp": new DecorType("lamp", false ),
+    "plant": new DecorType("plant", false ),
+    "trashcan": new DecorType("trashcan", false ),
+
     "32x16_bathtub": new DecorType("32x16_bathtub", false, 2),
     "32x16_couch": new DecorType("32x16_couch", false, 2),
     "32x16_table": new DecorType("32x16_table",false,2),
