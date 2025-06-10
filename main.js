@@ -31,11 +31,10 @@ class Room {
   }
 }
 class DecorType {
-  constructor(name, roomArr, wallAdjacent, width = 1, height = 1) {
+  constructor(name, wallAdjacent, width = 1, height = 1) {
     this.width = width;
     this.height = height;
     this.name = name;
-    this.roomArr = roomArr;
     this.wallAdjacent = wallAdjacent;
   }
 }
@@ -51,7 +50,7 @@ class Decor {
 }
 
 const SHOW_DEBUG_DECOR_INFO = false;
-const SHOW_DEBUG_TILES = true;
+const SHOW_DEBUG_TILES = false;
 const TILE_SIZE = 16;
 
 const WINDOW_CHANCE_INITIAL = 0.1;

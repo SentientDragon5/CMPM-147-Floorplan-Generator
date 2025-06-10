@@ -1,52 +1,43 @@
 new p5(function (p) {
   myp5 = p;
   let tileset = {};
-  let decorNames = [
-    "32x16_couch",
-    "32x16_table",
-    "32x32_bed",
-    "sink",
-    "south_chair",
-    "toilet-horizontal",
-    "toilet",
-    "32x16_bathtub",
-    "shower",
-    "oven",
-  ];
   let decorset = {};
-  let roomsDecor = {
-    bathroom: ["sink", "toilet", "toilet-horizontal", "shower"],
-    living_room: ["32x16_couch", "32x16_table", "south_chair"],
-    bed_room: ["32x32_bed", "south_chair", "32x16_couch", "32x16_table"],
-    kitchen: ["oven", "south_chair", "32x16_table"],
+
+  let roomsBaseDecor = {
+    bathroom: ["sink", "toilet", "shower"],
+    living_room: ["32x16_couch", "32x16_table", "south_chair", "south_chair"],
+    bed_room: ["32x32_bed", "32x16_couch", "32x16_table","south_chair"],
+    kitchen: ["oven","sink", "32x16_table","south_chair","south_chair"],
+  }
+  let decorTypeDict = {
+    "32x16_bathtub": new DecorType("32x16_bathtub", false, 2),
+    "32x16_couch": new DecorType("32x16_couch", false, 2),
+    "32x16_table": new DecorType("32x16_table",false,2),
+    "32x32_bed": new DecorType("32x32_bed", true, 2, 2),
+    "oven": new DecorType("oven", true),
+    "shower": new DecorType("shower", true),
+    "sink": new DecorType("sink", true),
+    "south_chair": new DecorType("south_chair", false),
+    "toilet-horizontal": new DecorType("toilet-horizontal", true),
+    "toilet": new DecorType("toilet", true),
   };
-  let decorTypeArr = [
-    new DecorType("32x16_bathtub", ["bathroom"], false, 2),
-    new DecorType("32x16_couch", ["living_room", "bed_room"], false, 2),
-    new DecorType(
-      "32x16_table",
-      ["living_room", "bed_room", "kitchen"],
-      false,
-      2
-    ),
-    new DecorType("32x32_bed", ["bed_room"], true, 2, 2),
-    new DecorType("oven", ["kitchen"], true),
-    new DecorType("shower", ["bathroom"], true),
-    new DecorType("sink", ["kitchen"], true),
-    new DecorType("south_chair", ["bed_room", "kitchen", "living_room"], false),
-    new DecorType("toilet-horizontal", ["bathroom"], true),
-    new DecorType("toilet", ["bathroom"], true),
-  ];
 
   let rooms = [];
+
   p.preload = function () {
     TILE_NAMES.forEach((t) => {
       tileset[t] = p.loadImage("./assets/tiles/" + t + ".png");
       console.log(t + " loaded");
     });
-    decorNames.forEach((t) => {
+    let temp = [];
+    for (n of Object.keys(decorTypeDict)){
+      temp.push(n)
+    } 
+    temp.forEach((t) => {
       decorset[t] = p.loadImage("./assets/props/" + t + ".png");
+      console.log(t + " loaded");
     });
+    p.print(decorset)
   };
 
   p.setup = function () {
@@ -209,20 +200,26 @@ new p5(function (p) {
       }
 
       //add furniture to rooms
-      let randchoices = [];
-      for (let x = room.x + 1; x < room.x + room.width; x++) {
-        for (let y = room.y + 1; y < room.y + room.height; y++) {
-          if (p.random([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) == 0) {
-            randchoices.push([x, y]);
-          }
-        }
-      }
-      for (let location of randchoices) {
-        //p.random(p.return_options())
-        let temp = p.return_size(location[0], location[1], room);
-        let chosen = p.random(p.return_options(temp[0], temp[1], room.name)); // returns decorType
-        //p.print(chosen)
-        room.decorList.push(new Decor(location[0], location[1], chosen));
+      let copiedFurnitureArr = [...roomsBaseDecor[room.name]]
+
+      // for (let x = room.x + 1; x < room.x + room.width; x++) {
+      //   for (let y = room.y + 1; y < room.y + room.height; y++) {
+      //     if (p.random([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) == 0) {
+      //       randchoices.push([x, y]);
+      //     }
+      //   }
+      // }
+      // for (let location of randchoices) {
+      //   //p.random(p.return_options())
+      //   let temp = p.return_size(location[0], location[1], room);
+      //   let chosen = p.random(p.return_options(temp[0], temp[1], room.name)); // returns decorType
+      //   //p.print(chosen)
+      //   room.decorList.push(new Decor(location[0], location[1], chosen));
+      // }
+      p.print(room)
+      for (n of copiedFurnitureArr){
+        let location = [p.random(room.x + 1,room.x + room.width-1),  p.random(room.y + 1,room.y + room.height-1)]
+        room.decorList.push(new Decor(location[0], location[1], decorTypeDict[n]));
       }
     }
 
@@ -392,6 +389,7 @@ new p5(function (p) {
     return [room.x + room.width - x, room.y + room.height - y];
   };
   p.return_options = function (width, height, roomname) {
+    return;
     let options = [];
     for (n of decorTypeArr) {
       if (n.roomArr.includes(roomname)) {
@@ -431,8 +429,8 @@ new p5(function (p) {
       for (let decor of room.decorList) {
         // in main.js
         if (SHOW_DEBUG_DECOR_INFO) {
-          // p.print(room.decorList);
-          // p.print(decor);
+          p.print(room.decorList);
+          p.print(decor);
         }
         p.placeDecor(
           decor.x * TILE_SIZE,
@@ -452,3 +450,4 @@ new p5(function (p) {
     return roomDict[name];
   };
 });
+
