@@ -7,9 +7,9 @@ const HOUSE_BORDER_MAX = 4;
 const HOUSE_BORDER_MIN = 0;
 
 const ROOM_NAMES = ["kitchen", "bathroom", "living_room", "bed_room"];
-const ROOM_MIN_W = 8; // Maybe we scale this by abstractness?
-const ROOM_MIN_H = 8;
-const ROOM_MIN_SPLIT_SIZE = 5;
+const ROOM_MIN_W = 7; // Maybe we scale this by abstractness?
+const ROOM_MIN_H = 7;
+const ROOM_MIN_SPLIT_SIZE = 3;
 
 class Room {
   constructor(x, y, width, height, name) {
@@ -117,73 +117,78 @@ rerollSeed.onclick = function () {
   myp5.regenerate();
 };
 
-function find_location(spacearr, decor,p){
+function find_location(spacearr, decor, p) {
   //spacearr is a 2d array of 1s and 0s, 0s indicating there is space
-  let randlocation = []
-  let chosenlocation = []
+  let randlocation = [];
+  let chosenlocation = [];
   let loops = 0;
   let adjacent = decor.wallAdjacent;
-  while (true){
+  while (true) {
     loops += 1;
-    if (loops > 100){
-      p.print("terminated")
+    if (loops > 100) {
+      p.print("terminated");
       break;
     }
-    if (adjacent){
-      if (p.random([0,1]) == 0){
-        randlocation = [p.random([0,1]) * (spacearr.length - 1), Math.floor(p.random(0,spacearr[0].length))]
-      }else{
-        randlocation = [Math.floor(p.random(0,spacearr.length)),p.random([0,1]) * (spacearr[0].length - 1)]
+    if (adjacent) {
+      if (p.random([0, 1]) == 0) {
+        randlocation = [
+          p.random([0, 1]) * (spacearr.length - 1),
+          Math.floor(p.random(0, spacearr[0].length)),
+        ];
+      } else {
+        randlocation = [
+          Math.floor(p.random(0, spacearr.length)),
+          p.random([0, 1]) * (spacearr[0].length - 1),
+        ];
       }
-    }else{
-      randlocation = [Math.floor(p.random(0,spacearr.length)),Math.floor(p.random(0,spacearr[0].length))]
+    } else {
+      randlocation = [
+        Math.floor(p.random(0, spacearr.length)),
+        Math.floor(p.random(0, spacearr[0].length)),
+      ];
     }
-    chosenlocation = [-1,-1]
-    
+    chosenlocation = [-1, -1];
+
     //check if decor wants adjacent to wall
-    
-    
 
-
-    if(decor.width == 2){
+    if (decor.width == 2) {
       //check if spot on edge
-      if (randlocation[0] == spacearr.length - 1){
+      if (randlocation[0] == spacearr.length - 1) {
         //spot on edge
-        p.print("spot on edge")
+        p.print("spot on edge");
         continue;
       }
     }
 
-    if (decor.height == 2){
-      if (randlocation[1] == spacearr[0].length - 1){
+    if (decor.height == 2) {
+      if (randlocation[1] == spacearr[0].length - 1) {
         //spot on edge
-        p.print("spot on edge")
+        p.print("spot on edge");
         continue;
       }
     }
 
     let validspot = true;
-    for(let x = randlocation[0]; x < randlocation[0] + decor.width; x++){
-      for (let y = randlocation[1]; y < randlocation[1] + decor.height; y++){
-        p.print(spacearr[x][y])
-        if(spacearr[x][y] == 1){
+    for (let x = randlocation[0]; x < randlocation[0] + decor.width; x++) {
+      for (let y = randlocation[1]; y < randlocation[1] + decor.height; y++) {
+        p.print(spacearr[x][y]);
+        if (spacearr[x][y] == 1) {
           validspot = false;
           break;
         }
       }
-      if (validspot == false){
-          break;
-        }
+      if (validspot == false) {
+        break;
+      }
     }
-    if (validspot == false){
-      p.print("invalid spot")
+    if (validspot == false) {
+      p.print("invalid spot");
       continue;
     }
     chosenlocation = randlocation;
-    
 
-    for(let x = randlocation[0]; x < randlocation[0] + decor.width; x++){
-      for (let y = randlocation[1]; y < randlocation[1] + decor.height; y++){
+    for (let x = randlocation[0]; x < randlocation[0] + decor.width; x++) {
+      for (let y = randlocation[1]; y < randlocation[1] + decor.height; y++) {
         spacearr[x][y] = 1;
       }
     }
@@ -194,12 +199,13 @@ function find_location(spacearr, decor,p){
   return chosenlocation;
 }
 
-function mutate_arr(arr,p){
- let readArr = [...arr];
- let abstraction = abstractnessBox.value;
+function mutate_arr(arr, p) {
+  let readArr = [...arr];
+  let abstraction = abstractnessBox.value;
 
- for (let n = 0; n < abstraction / 2.0; n++){
-  arr[Math.floor(p.random(0,arr.length))] = readArr[Math.floor(p.random(0,arr.length))];
- }
- return arr;
+  for (let n = 0; n < abstraction / 2.0; n++) {
+    arr[Math.floor(p.random(0, arr.length))] =
+      readArr[Math.floor(p.random(0, arr.length))];
+  }
+  return arr;
 }
