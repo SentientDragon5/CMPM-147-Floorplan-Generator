@@ -1,7 +1,7 @@
 # CMPM-147-Floorplan-Generator
 A procedural floorplan generator
 
-## [Open Live Page](https://github.com/SentientDragon5/CMPM-147-Floorplan-Generator/deployments/github-pages)
+## [Open Live Page](https://sentientdragon5.github.io/CMPM-147-Floorplan-Generator/)
 Use Live server to open this to debug.
 
 ## Canvas
