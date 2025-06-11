@@ -327,7 +327,7 @@ new p5(function (p) {
       }, // East
     ];
 
-    let doorPlaced = false; // Flag to ensure only one door is placed
+    let doorPlaced = 0; // Flag to ensure only one door is placed
 
     // Iterate through each wall and add windows
     for (const wall of walls) {
@@ -335,7 +335,7 @@ new p5(function (p) {
       for (let i = wall.start; i < wall.end; i++) {
         let tile_name = tileInd("wall");
         let canPlaceWindow = true;
-        let canPlaceDoor = !doorPlaced; // Can place door if one hasn't been placed yet
+        let canPlaceDoor = doorPlaced < 1; // Can place door if one hasn't been placed yet
 
         if (wall.isVertical) {
           // Check for interior walls to the right (for west wall) or left (for east wall)
@@ -379,7 +379,7 @@ new p5(function (p) {
         if (canPlaceDoor && p.random() < 0.3) {
           // 30% chance to place a door if conditions are met
           tile_name = tileInd(wall.doorType);
-          doorPlaced = true; // Ensure only one door is placed
+          doorPlaced++; // Ensure only one door is placed
         } else if (canPlaceWindow && p.random() < windowChance) {
           tile_name = tileInd(wall.windowType);
           windowStreak++; // Increase streak
