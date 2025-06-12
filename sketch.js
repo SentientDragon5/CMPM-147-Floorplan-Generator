@@ -47,18 +47,14 @@ new p5(function (p) {
     ],
   };
   let decorTypeDict = {
-    "32x16_desk": new DecorType("32x16_desk", true, 2),
-    "16x32_desk": new DecorType("16x32_desk", true, 1, 2),
-
-    "32x16_sink": new DecorType("32x16_sink", true, 2),
-    "16x32_sink": new DecorType("16x32_sink", true, 1, 2),
-
-    "32x16_dresser": new DecorType("32x16_dresser", true, 2),
-    "16x32_dresser": new DecorType("16x32_dresser", true, 1, 2),
-
-    "32x16_fridge": new DecorType("32x16_fridge", true, 2),
-    "16x32_fridge": new DecorType("16x32_fridge", true, 1, 2),
-
+    "32x16_desk": new DecorType("32x16_desk",true,2 ),
+    "16x32_desk": new DecorType("16x32_desk", true,1,2),
+    "32x16_sink": new DecorType("32x16_sink",true,2 ),
+    "16x32_sink": new DecorType("16x32_sink", true,1, 2),
+    "32x16_dresser": new DecorType("32x16_dresser",true,2 ),
+    "16x32_dresser": new DecorType("16x32_dresser",true ,1,2 ),
+    "32x16_fridge": new DecorType("32x16_fridge",true,2 ),
+    "16x32_fridge": new DecorType("16x32_fridge", true,1,2 ),
     "32x32_bookcase1": new DecorType("32x32_bookcase1", true, 2, 2),
     lamp: new DecorType("lamp", false),
     plant: new DecorType("plant", false),
@@ -278,15 +274,18 @@ new p5(function (p) {
             alternate_rotation_dict[copiedFurnitureArr[n]][p.random([0, 1])];
         }
       }
-      p.print(copiedFurnitureArr);
-      for (n of copiedFurnitureArr) {
-        let location = find_location(roomSpaceArr, decorTypeDict[n], p);
-        let newLocation = [room.x + 1 + location[0], room.y + 1 + location[1]];
-
-        room.decorList.push(
-          new Decor(newLocation[0], newLocation[1], decorTypeDict[n])
-        );
+      p.print(copiedFurnitureArr)
+      for (n of copiedFurnitureArr){
+        let location = find_location(roomSpaceArr,decorTypeDict[n],p);
+        if (location == [-1,-1]){
+          continue;
+        }
+        let newLocation = [room.x + 1 + location[0], room.y + 1 + location[1]]
+        
+        room.decorList.push(new Decor(newLocation[0], newLocation[1], decorTypeDict[n]));
       }
+
+
     }
 
     // Define wall configurations with start, end, and direction
@@ -453,21 +452,6 @@ new p5(function (p) {
   };
   p.return_size = function (x, y, room) {
     return [room.x + room.width - x, room.y + room.height - y];
-  };
-  p.return_options = function (width, height, roomname) {
-    return;
-    let options = [];
-    for (n of decorTypeArr) {
-      if (n.roomArr.includes(roomname)) {
-        if (n.width <= width) {
-          if (n.height <= height) {
-            options.push(n);
-          }
-        }
-      }
-    }
-    //p.print(options);
-    return options;
   };
   p.getRoomName = function () {
     return ROOM_NAMES[Math.floor(p.random(ROOM_NAMES.length))];

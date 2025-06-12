@@ -125,8 +125,10 @@ function find_location(spacearr, decor, p) {
   let adjacent = decor.wallAdjacent;
   while (true) {
     loops += 1;
-    if (loops > 100) {
-      p.print("terminated");
+    chosenlocation = [-1,-1]
+    
+    if (loops > 100){
+      p.print("terminated")
       break;
     }
     if (adjacent) {
@@ -147,8 +149,8 @@ function find_location(spacearr, decor, p) {
         Math.floor(p.random(0, spacearr[0].length)),
       ];
     }
-    chosenlocation = [-1, -1];
-
+    
+    
     //check if decor wants adjacent to wall
 
     if (decor.width == 2) {
